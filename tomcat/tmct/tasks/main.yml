@@ -1,0 +1,90 @@
+---
+- name: Installation of Java
+  apt:
+    name: default-jdk
+    state: present
+
+- name: Adding the user tomcat
+  user:
+    name: tomcat
+    home: /opt/tomcat
+    shell: /bin/false
+	
+- name: Creating the tomcat download directory
+  file:
+    path: /tmp/apache_tomcat
+    state: directory
+
+- name: Downloading the tomcat
+  get_url:
+    url: "{{ tomcat_download_url }}"
+    dest: /tmp/apache_tomcat/
+
+- name: Creating the {{ tomcat_home_dir }} directory
+  file:
+    path: "{{ tomcat_home_dir }}"
+    state: directory
+    group: tomcat
+    recurse: yes
+
+- name: Unarchiving the tomcat tar file to the tomcat home directory {{ tomcat_home_dir }}
+  unarchive:
+    src: "/tmp/apache_tomcat/{{ tomcat_tar_file_name }}"
+    dest: "{{ tomcat_home_dir }}"
+    group: tomcat
+    extra_opts:
+    - --strip-components=1
+
+- name: Giving read permission recursively to {{ tomcat_home_dir }}/conf directory
+  file:
+    path: "{{ tomcat_home_dir }}/conf"
+    mode: "g+r"
+    recurse: yes
+
+- name: Giving execute permission to {{ tomcat_home_dir }}/conf directory only
+  file:
+    path: "{{ tomcat_home_dir }}/conf"
+    mode: "g+x"
+
+- name: Making the tomcat user owner for webapps, work, temp and logs directories
+  file:
+    path: "{{ item.path }}"
+    owner: tomcat
+    recurse: yes
+  with_items:
+    - { path: '{{ tomcat_home_dir }}/webapps/' }
+    - { path: '{{ tomcat_home_dir }}/work/' }
+    - { path: '{{ tomcat_home_dir }}/temp/' }
+    - { path: '{{ tomcat_home_dir }}/logs/' }
+
+- name: Changing the tomcat default port
+  template:
+    src: server.xml.j2
+    dest: "{{ tomcat_home_dir }}/conf/server.xml"
+
+- name: Changing the user credentials for tomcat gui
+  template:
+    src: tomcat-users.xml.j2 
+    dest: "{{ tomcat_home_dir }}/conf/tomcat-users.xml"
+
+- name: Creating the tomcat service systemd file
+  template:
+    src: tomcat.service.j2
+    dest: "{{ systemd_tomcat }}"
+  become: yes
+  become_user: root
+
+- name: Systemd daemon reloading
+  systemd:
+    daemon_reload: yes
+
+- name: Starting the tomcat service
+  systemd:
+    state: started
+    name: tomcat
+
+- name: Clearing the download directory for tomcat
+  file:
+    path: /tmp/apache_tomcat
+    state: absent
+    
