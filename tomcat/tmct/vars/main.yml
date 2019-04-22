@@ -1,7 +1,7 @@
 ---
 tomcat_user: "tomcat7"
-tomcat_tar_file_name: apache-tomcat-8.5.38.tar.gz
-tomcat_download_url: http://apache.mirrors.ionfish.org/tomcat/tomcat-8/v8.5.38/bin/apache-tomcat-8.5.38.tar.gz
+tomcat_tar_file_name: apache-tomcat-8.5.40.tar.gz
+tomcat_download_url: http://apache.mirrors.ionfish.org/tomcat/tomcat-8/v8.5.40/bin/apache-tomcat-8.5.40.tar.gz
 tomcat_home_dir: "/opt/tomcat"
 JAVA_HOME: "/usr/local/java/latest/jre"
 systemd_tomcat: "/etc/systemd/system/tomcat.service"
