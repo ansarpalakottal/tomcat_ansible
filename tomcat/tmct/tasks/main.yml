@@ -3,6 +3,7 @@
   apt:
     name: default-jdk
     state: present
+  when: ansible_os_family == Debian
 
 - name: Adding the user tomcat
   user:
