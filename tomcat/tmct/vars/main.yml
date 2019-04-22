@@ -3,6 +3,6 @@ tomcat_user: "tomcat7"
 tomcat_tar_file_name: apache-tomcat-8.5.40.tar.gz
 tomcat_download_url: http://apache.mirrors.ionfish.org/tomcat/tomcat-8/v8.5.40/bin/apache-tomcat-8.5.40.tar.gz
 tomcat_home_dir: "/opt/tomcat"
-JAVA_HOME: "/usr/local/java/latest/jre"
+JAVA_HOME: "/usr/lib/jvm/java-1.8.0-openjdk-1.8.0.201.b09-2.el7_6.x86_64/jre"
 systemd_tomcat: "/etc/systemd/system/tomcat.service"
 tomcat_custom_port: "9900"
